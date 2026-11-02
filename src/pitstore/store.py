@@ -159,9 +159,12 @@ class OnlineStore:
 def check_point_in_time(table: EventTable, features: list[Feature], entity: np.ndarray,
                         t: np.ndarray, n_checks: int = 200, seed: int = 0,
                         compute=None) -> list[int]:  # type: ignore[no-untyped-def]
-    """Future-perturbation test. For sampled queries, randomise every event of that entity at
-    or after the query's visibility cutoff (t − delay) and recompute. Any feature that changes
-    depended on data it should not have seen. Returns indices of violating queries.
+    """Future-perturbation test. For sampled queries, take every event of that entity at or
+    after the query's visibility cutoff (t − min delay) and (1) randomise its values and times,
+    (2) delete it; recompute under each. Any feature that changes depended on data it should
+    not have seen. Returns indices of violating queries. Sound (no false alarms for a correct
+    pipeline) but not complete: a leaky feature whose value happens not to change under both
+    perturbations is missed.
 
     ``compute(table, features, entity, t) -> dict`` lets you test an arbitrary feature
     pipeline (default: the offline store).
@@ -177,16 +180,24 @@ def check_point_in_time(table: EventTable, features: list[Feature], entity: np.n
         fut = (table.entity == entity[i]) & (table.time >= cutoff)
         if not fut.any():
             continue
+        # perturbation 1: randomise values and times of future events
         vals = {k: v.copy() for k, v in table.values.items()}
         for v in vals.values():
             v[fut] = rng.normal(0, 1e6, fut.sum())
         times = table.time.copy()
         times[fut] = cutoff + rng.integers(0, 10 ** 6, fut.sum())
-        pert = EventTable(table.entity.copy(), times, vals)
-        got = compute(pert, features, entity[i : i + 1], t[i : i + 1])
-        for f in features:
-            a, b = base[f.name][j], got[f.name][0]
-            if not (a == b or (np.isnan(a) and np.isnan(b))):
-                bad.append(int(i))
-                break
+        variants = [EventTable(table.entity.copy(), times, vals)]
+        # perturbation 2: delete future events (catches windows the moved events miss)
+        keep = ~fut
+        variants.append(EventTable(table.entity[keep], table.time[keep],
+                                   {k: v[keep] for k, v in table.values.items()}))
+        changed = False
+        for pert in variants:
+            got = compute(pert, features, entity[i : i + 1], t[i : i + 1])
+            for f in features:
+                a, b = base[f.name][j], got[f.name][0]
+                if not (a == b or (np.isnan(a) and np.isnan(b))):
+                    changed = True
+        if changed:
+            bad.append(int(i))
     return bad

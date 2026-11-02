@@ -1,0 +1,4 @@
+event table: 36,975 purchases, built in 2 ms
+  point-in-time (as of query time)       PASS
+  snapshot join (as of dataset end)      FAIL (60/100 queries saw future data)
+  off-by-one-window (+30 days)           FAIL (60/100 queries saw future data)

@@ -3,31 +3,31 @@
   {
    "events": 10000,
    "queries": 10000,
-   "pitstore_build_s": 0.0016458749887533486,
-   "pitstore_query_s": 0.0003928749938495457,
-   "pandas_s": 0.009304042003350332,
-   "python_loop_s": 0.037628999998560175
+   "pitstore_build_s": 0.001604249991942197,
+   "pitstore_query_s": 0.00044495801557786763,
+   "pandas_s": 0.010197333991527557,
+   "python_loop_s": 0.04508729200460948
   },
   {
    "events": 100000,
    "queries": 100000,
-   "pitstore_build_s": 0.023318333987845108,
-   "pitstore_query_s": 0.004695584008004516,
-   "pandas_s": 0.07353504200000316
+   "pitstore_build_s": 0.022291458008112386,
+   "pitstore_query_s": 0.005633875000057742,
+   "pandas_s": 0.08273416699375957
   },
   {
    "events": 1000000,
    "queries": 1000000,
-   "pitstore_build_s": 0.5148431659908965,
-   "pitstore_query_s": 0.08556833301554434,
-   "pandas_s": 1.308344874996692
+   "pitstore_build_s": 0.3056589579791762,
+   "pitstore_query_s": 0.11688104199129157,
+   "pandas_s": 2.2785813749942463
   },
   {
    "events": 10000000,
    "queries": 1000000,
-   "pitstore_build_s": 20.9873642080056,
-   "pitstore_query_s": 0.1789391250058543,
-   "pandas_s": 22.636601833015447
+   "pitstore_build_s": 11.768385375005892,
+   "pitstore_query_s": 0.28526295800111257,
+   "pandas_s": 23.14461570797721
   }
  ],
  "feature": {
