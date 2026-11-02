@@ -22,7 +22,7 @@ jobs:
         run: mypy
       - name: Brute-force, online/offline consistency and leakage tests
         run: pytest -q
-      - name: Smoke: leakage check on correct and leaky pipelines
+      - name: "Smoke: leakage check on correct and leaky pipelines"
         run: pytest -q tests/test_store.py -k leakage
 
 
