@@ -151,7 +151,7 @@ class OnlineStore:
             elif f.agg == "last":
                 out[f.name] = sel[-1][1][f.column] if sel else float("nan")  # type: ignore[index]
             else:
-                s = float(sum(v[f.column] for _, v in sel))  # type: ignore[index]
+                s = float(sum(v[f.column] for _, v in sel))  # type: ignore[index,misc]
                 out[f.name] = s if f.agg == "sum" else (s / len(sel) if sel else float("nan"))
         return out
 
