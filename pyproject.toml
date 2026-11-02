@@ -1,0 +1,39 @@
+[project]
+name = "pitstore"
+version = "0.1.0"
+description = "Point-in-time-correct feature store: vectorised as-of joins, an online store with training/serving consistency tests, and a future-perturbation leakage check; measures how much leakage inflates metrics on real retail data"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Eshaan Kapooswalla", email = "eshaank@my.yorku.ca" }]
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26"]
+
+[project.optional-dependencies]
+bench = ["pandas>=2", "pyarrow>=14", "openpyxl>=3.1", "lightgbm>=4", "scikit-learn>=1.4", "matplotlib>=3.8"]
+dev = ["pytest>=8", "hypothesis>=6", "ruff>=0.6", "mypy>=1.10", "pandas>=2"]
+
+[project.scripts]
+pitstore = "pitstore.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pitstore"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["UP031", "E741", "E731"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+files = ["src/pitstore"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
